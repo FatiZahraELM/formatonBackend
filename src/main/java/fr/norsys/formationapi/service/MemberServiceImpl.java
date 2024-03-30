@@ -2,8 +2,9 @@ package fr.norsys.formationapi.service;
 
 import fr.norsys.formationapi.entity.Formation;
 import fr.norsys.formationapi.entity.Member;
-import fr.norsys.formationapi.repository.FormationNoteRepository;
 import fr.norsys.formationapi.repository.MemberRepository;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,11 +13,7 @@ import java.util.List;
 public class MemberServiceImpl implements MemberService{
     @Autowired
     private MemberRepository memberRepository;
-    private final FormationNoteRepository formationNoteRepository;
 
-    public MemberServiceImpl(FormationNoteRepository formationNoteRepository) {
-        this.formationNoteRepository = formationNoteRepository;
-    }
 
     @Override
     public List<Member> getAll() {
@@ -40,7 +37,7 @@ public class MemberServiceImpl implements MemberService{
         member.setFirstName(newMember.getFirstName());
         member.setLastName(newMember.getLastName());
         member.setEmail(newMember.getEmail());
-        member.setNotes(newMember.getNotes());
+        member.setFormation(newMember.getFormation());
         memberRepository.save(member);
     }
 
@@ -50,7 +47,17 @@ public class MemberServiceImpl implements MemberService{
     }
 
     @Override
-    public List<Formation> getFormationsByMemberId(int memberId) {
-        return formationNoteRepository.findFormationsByMemberId(memberId);
+    public List<Formation> getFormationByMemberId(int memberId) {
+        Member member=memberRepository.findById(memberId).get();
+        return memberRepository.findFormationByMemberId(member.getFormation().getId());
+    }
+    @Override
+    @Transactional
+    public void deleteMemberByFormationIdAndMemberId(int formationId, int memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new EntityNotFoundException("Member not found"));
+        if (member.getFormation() != null && member.getFormation().getId() == formationId) {
+            memberRepository.delete(member);
+        }
     }
 }

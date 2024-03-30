@@ -1,6 +1,6 @@
 package fr.norsys.formationapi.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.Data;
@@ -24,7 +24,10 @@ public class Member {
 
     @Column(name="email")
     private String email;
-    @OneToMany(mappedBy = "member")
-    @JsonIgnore
-    private List<FormationNote> notes;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="formation_id")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
+    private Formation formation;
 }

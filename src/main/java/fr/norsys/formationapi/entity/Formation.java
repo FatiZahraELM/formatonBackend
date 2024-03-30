@@ -28,7 +28,8 @@ public class Formation {
 
     @Column(name="dateFin")
     private LocalDateTime dateFin;
-    @JsonIgnore
-    @OneToMany(mappedBy = "formation")
-    private List<FormationNote> notes;
+
+    @JsonIgnore(value = true)
+    @OneToMany(mappedBy = "formation",fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Member> members;
 }

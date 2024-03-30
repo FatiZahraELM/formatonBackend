@@ -2,7 +2,6 @@ package fr.norsys.formationapi.service;
 
 import fr.norsys.formationapi.entity.Formation;
 import fr.norsys.formationapi.entity.Member;
-import fr.norsys.formationapi.repository.FormationNoteRepository;
 import fr.norsys.formationapi.repository.FormationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,11 +12,8 @@ public class FormationServiceImpl implements FormationService{
 
     @Autowired
     private FormationRepository formationRepository;
-    private final FormationNoteRepository formationNoteRepository;
 
-    public FormationServiceImpl(FormationNoteRepository formationNoteRepository) {
-        this.formationNoteRepository = formationNoteRepository;
-    }
+
 
     @Override
     public List<Formation> getAll() {
@@ -43,7 +39,6 @@ public class FormationServiceImpl implements FormationService{
         formation.setDateDebut(newFormation.getDateDebut());
         formation.setDescription(newFormation.getDescription());
         formation.setDateFin(newFormation.getDateFin());
-        formation.setNotes(newFormation.getNotes());
          formationRepository.save(formation);
     }
 
@@ -54,10 +49,10 @@ public class FormationServiceImpl implements FormationService{
 
     @Override
     public List<Member> getMembersByFormationId(int formationId) {
-        return formationNoteRepository.findMembersByFormationId(formationId);
+        return formationRepository.findMembersByFormationId(formationId);
     }
-    @Override
-    public void deleteFromNote(int formationId, int memberId){
-        formationNoteRepository.deleteFromNote(formationId,memberId);
-    }
+
+
+
+
 }

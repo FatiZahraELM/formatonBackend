@@ -13,8 +13,8 @@ public interface FormationService {
 
     void save(Formation formation);
 
-    void updateFormation(int id,Formation newFormation) ;
 
+    void updateFormation(int id, Formation newFormation);
 
     void deleteById(int id);
 
@@ -22,5 +22,5 @@ public interface FormationService {
 
     List<Member> getMembersByFormationId(int formationId);
 
-    void deleteFromNote(int formationId, int memberId);
+
 }

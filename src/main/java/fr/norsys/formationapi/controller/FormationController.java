@@ -3,6 +3,7 @@ package fr.norsys.formationapi.controller;
 import fr.norsys.formationapi.entity.Formation;
 import fr.norsys.formationapi.entity.Member;
 import fr.norsys.formationapi.service.FormationService;
+import fr.norsys.formationapi.service.MemberService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,11 @@ public class FormationController {
     @Autowired
     private FormationService formationService;
 
+    private final MemberService memberService;
+
+    public FormationController(MemberService memberService) {
+        this.memberService = memberService;
+    }
 
     @GetMapping
     public ResponseEntity <List<Formation>> findAll() {
@@ -48,6 +54,13 @@ public class FormationController {
         formationService.save(formation);
         return ResponseEntity.ok(null);
     }
+    @PostMapping("/{id}/members")
+    public ResponseEntity<Void> addMember(@PathVariable int id,@RequestBody Member member){
+        Formation formation=formationService.findById(id);
+        member.setFormation(formation);
+        memberService.save(member);
+        return ResponseEntity.ok(null);
+    }
 
     @ResponseStatus(HttpStatus.OK)
     @PutMapping("/{id}")
@@ -73,7 +86,8 @@ public class FormationController {
 
     @DeleteMapping("/{id1}/members/{id2}")
     public ResponseEntity<Void> deleteFromNote(@PathVariable int id1,@PathVariable int id2){
-    formationService.deleteFromNote(id1,id2);
+        memberService.deleteMemberByFormationIdAndMemberId(id1,id2);
         return  ResponseEntity.ok(null);
     }
+
 }

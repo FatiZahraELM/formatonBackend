@@ -33,10 +33,10 @@ public class MemberController {
         return ResponseEntity.ok().body(member);
     }
     @GetMapping("/{id}/formations")
-    public ResponseEntity<List<Formation>> findFormationsByMemberId(@PathVariable int id) {
-        List<Formation> formations = memberService.getFormationsByMemberId(id);
+    public ResponseEntity<List<Formation>> findFormationByMemberId(@PathVariable int id) {
+        List<Formation> formation = memberService.getFormationByMemberId(id);
 
-        return ResponseEntity.ok().body(formations);
+        return ResponseEntity.ok().body(formation);
     }
 
 
